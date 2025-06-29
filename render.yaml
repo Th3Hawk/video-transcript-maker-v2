@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: video-transcriber
+    env: python
+    buildCommand: |
+      pip install -r requirements.txt
+      python -m playwright install --with-deps
+    startCommand: python app.py
+    envVars:
+      - key: PLAYWRIGHT_BROWSERS_PATH
+        value: "0"
