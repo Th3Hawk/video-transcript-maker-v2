@@ -24,21 +24,26 @@ def sanitize_filename(name: str) -> str:
 
 async def handle_granicus_url(page: 'Page'):
     print("  - Detected Granicus platform. Executing trigger sequence...")
-    player_locator = page.locator(".flowplayer")
-    cc_button_locator = page.locator(".fp-cc").first
 
-    await player_locator.scroll_into_view_if_needed()
-    await page.wait_for_selector(".flowplayer", state="visible", timeout=20000)
-    await player_locator.click()
-    await page.wait_for_timeout(500)
-    await cc_button_locator.scroll_into_view_if_needed()
-    await page.wait_for_selector(".fp-cc", state="visible", timeout=20000)
-    await cc_button_locator.click()
-    await page.wait_for_timeout(500)
-    await player_locator.hover(timeout=5000)
-    await cc_button_locator.click(timeout=20000)
-    await page.wait_for_timeout(500)
-    await page.locator(".fp-menu").get_by_text("On", exact=True).click(timeout=20000)
+    try:
+        await page.wait_for_selector(".flowplayer", state="visible", timeout=20000)
+        player_locator = page.locator(".flowplayer")
+        await player_locator.scroll_into_view_if_needed()
+        await player_locator.click()
+        await page.wait_for_timeout(500)
+        await player_locator.click()
+        await page.wait_for_timeout(500)
+
+        await player_locator.hover(timeout=5000)
+        cc_button_locator = page.locator(".fp-cc").first
+        await cc_button_locator.scroll_into_view_if_needed()
+        await cc_button_locator.click()
+        await page.wait_for_timeout(500)
+        await page.locator(".fp-menu").get_by_text("On", exact=True).click(timeout=10000)
+
+    except Exception as e:
+        print(f"  - ❌ Could not complete Granicus interaction: {e}")
+
 
 async def handle_viebit_url(page: 'Page'):
     print("  - Detected Viebit platform. Executing trigger sequence...")
