@@ -51,7 +51,7 @@ async def handle_granicus_url(page: 'Page'):
             print("  - ⚠️ Captions button not visible — continuing anyway.")
 
     except Exception as e:
-        print(f"  - ❌ Could not complete Granicus interaction: {e}"
+        print(f"  - ❌ Could not complete Granicus interaction: {e}")
 
 
 async def handle_viebit_url(page: 'Page'):
