@@ -27,22 +27,22 @@ async def handle_granicus_url(page: 'Page'):
     player_locator = page.locator(".flowplayer")
     cc_button_locator = page.locator(".fp-cc").first
 
-    await player_locator.click(timeout=10000)
+    await player_locator.click(timeout=20000)
     await page.wait_for_timeout(500)
-    await player_locator.click(timeout=10000)
+    await player_locator.click(timeout=20000)
     await page.wait_for_timeout(500)
     await player_locator.hover(timeout=5000)
-    await cc_button_locator.click(timeout=10000)
+    await cc_button_locator.click(timeout=20000)
     await page.wait_for_timeout(500)
-    await page.locator(".fp-menu").get_by_text("On", exact=True).click(timeout=10000)
+    await page.locator(".fp-menu").get_by_text("On", exact=True).click(timeout=20000)
 
 async def handle_viebit_url(page: 'Page'):
     print("  - Detected Viebit platform. Executing trigger sequence...")
     await page.locator(".vjs-big-play-button").click(timeout=20000)
-    await page.locator(".vjs-play-control").click(timeout=10000)
+    await page.locator(".vjs-play-control").click(timeout=20000)
     await page.wait_for_timeout(500)
-    await page.locator("button.vjs-subs-caps-button").click(timeout=10000)
-    await page.locator('.vjs-menu-item:has-text("English")').click(timeout=10000)
+    await page.locator("button.vjs-subs-caps-button").click(timeout=20000)
+    await page.locator('.vjs-menu-item:has-text("English")').click(timeout=20000)
 
 async def process_url(url: str):
     print(f"\n▶️ Processing: {url}")
