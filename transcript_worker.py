@@ -26,23 +26,32 @@ async def handle_granicus_url(page: 'Page'):
     print("  - Detected Granicus platform. Executing trigger sequence...")
 
     try:
-        await page.wait_for_selector(".flowplayer", state="visible", timeout=20000)
+        # Wait for the player to exist at all (even if hidden)
+        await page.wait_for_selector(".flowplayer", timeout=15000)
         player_locator = page.locator(".flowplayer")
         await player_locator.scroll_into_view_if_needed()
-        await player_locator.click()
-        await page.wait_for_timeout(500)
-        await player_locator.click()
-        await page.wait_for_timeout(500)
+        await page.mouse.move(100, 100)
+        await page.wait_for_timeout(1000)
 
-        await player_locator.hover(timeout=5000)
-        cc_button_locator = page.locator(".fp-cc").first
-        await cc_button_locator.scroll_into_view_if_needed()
-        await cc_button_locator.click()
-        await page.wait_for_timeout(500)
-        await page.locator(".fp-menu").get_by_text("On", exact=True).click(timeout=10000)
+        # Click to start the player even if it's not visible
+        await page.evaluate("""
+            () => {
+                const player = document.querySelector('.flowplayer');
+                if (player) player.click();
+            }
+        """)
+        await page.wait_for_timeout(1000)
+
+        # Try toggling captions
+        cc_button = page.locator(".fp-cc").first
+        if await cc_button.is_visible(timeout=5000):
+            await cc_button.click()
+            await page.locator(".fp-menu").get_by_text("On", exact=True).click(timeout=10000)
+        else:
+            print("  - ⚠️ Captions button not visible — continuing anyway.")
 
     except Exception as e:
-        print(f"  - ❌ Could not complete Granicus interaction: {e}")
+        print(f"  - ❌ Could not complete Granicus interaction: {e}"
 
 
 async def handle_viebit_url(page: 'Page'):
