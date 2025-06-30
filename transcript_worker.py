@@ -47,11 +47,21 @@ async def handle_granicus_url(page: 'Page'):
 
 async def handle_viebit_url(page: 'Page'):
     print("  - Detected Viebit platform. Executing trigger sequence...")
-    await page.locator(".vjs-big-play-button").click(timeout=20000)
-    await page.locator(".vjs-play-control").click(timeout=20000)
-    await page.wait_for_timeout(500)
-    await page.locator("button.vjs-subs-caps-button").click(timeout=20000)
-    await page.locator('.vjs-menu-item:has-text("English")').click(timeout=20000)
+    try:
+        # These may not be needed if VTT file is intercepted early
+        play_button = page.locator(".vjs-big-play-button")
+        if await play_button.is_visible(timeout=5000):
+            await play_button.click()
+            await page.wait_for_timeout(500)
+
+        cc_button = page.locator("button.vjs-subs-caps-button")
+        if await cc_button.is_visible(timeout=5000):
+            await cc_button.click()
+            await page.locator('.vjs-menu-item:has-text("English")').click(timeout=10000)
+
+    except Exception as e:
+        print(f"  - ⚠️ Non-critical error during Viebit interaction: {e}")
+
 
 async def process_url(url: str):
     print(f"\n▶️ Processing: {url}")
