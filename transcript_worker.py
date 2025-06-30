@@ -27,9 +27,13 @@ async def handle_granicus_url(page: 'Page'):
     player_locator = page.locator(".flowplayer")
     cc_button_locator = page.locator(".fp-cc").first
 
-    await player_locator.click(timeout=20000)
+    await player_locator.scroll_into_view_if_needed()
+    await page.wait_for_selector(".flowplayer", state="visible", timeout=20000)
+    await player_locator.click()
     await page.wait_for_timeout(500)
-    await player_locator.click(timeout=20000)
+    await cc_button_locator.scroll_into_view_if_needed()
+    await page.wait_for_selector(".fp-cc", state="visible", timeout=20000)
+    await cc_button_locator.click()
     await page.wait_for_timeout(500)
     await player_locator.hover(timeout=5000)
     await cc_button_locator.click(timeout=20000)
