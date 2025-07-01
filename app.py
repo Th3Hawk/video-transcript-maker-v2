@@ -23,7 +23,8 @@ def index():
                     result = await process_url(url)  # Now returns transcript directly
                 except Exception as e:
                     result = "[An error occurred.]"
-                    f.write(f"[ERROR] {e}\n")
+                    f.write("[ERROR] Exception occurred:\n")
+                    f.write(traceback.format_exc())
             return result, f.getvalue()
 
         transcript, logs = asyncio.run(run_and_capture())
